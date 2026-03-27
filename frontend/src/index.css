@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;700;800&display=swap');
+
+:root {
+  --background: #0B0E11;
+  --surface: #111417;
+  --surface-variant: rgba(50, 53, 56, 0.4);
+  --primary: #dcb8ff;
+  --primary-container: #8A2BE2;
+  --secondary: #00D1FF;
+  --text-main: #e1e2e7;
+  --text-muted: #cfc2d7;
+  --border: rgba(152, 140, 160, 0.1);
+  --success: #ffb873;
+
+  --font-heading: 'Manrope', sans-serif;
+  --font-body: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  max-width: 1200px;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  margin: 0;
+}
+
+/* Glassmorphism Classes */
+.glass-card {
+  background: var(--surface-variant);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.glow-text {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Base Buttons */
+.btn {
+  font-family: var(--font-body);
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Primary Gradient Button */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-container));
+  color: #fff;
+  box-shadow: 0px 4px 20px rgba(138, 43, 226, 0.3);
+}
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0px 6px 24px rgba(138, 43, 226, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Secondary/Ghost Button */
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--secondary);
+  color: var(--secondary);
+}
+.btn-outline:hover:not(:disabled) {
+  background: rgba(0, 209, 255, 0.1);
+}
+
+/* Input Fields */
+.input-field {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  transition: all 0.2s;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+.input-field:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 2px rgba(0, 209, 255, 0.2), inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+/* Grid Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Utility */
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mt-4 { margin-top: 1rem; }
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.gap-2 { gap: 0.5rem; }
+.gap-4 { gap: 1rem; }
+.justify-between { justify-content: space-between; }
+.items-center { align-items: center; }
+.text-2xl { font-size: 1.5rem; }
+.text-sm { font-size: 0.875rem; }
+.text-muted { color: var(--text-muted); }
+.text-right { text-align: right; }
+.w-full { width: 100%; }
