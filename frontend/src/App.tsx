@@ -4,9 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { config } from '../config'
 
 import { LandingPage } from './pages/LandingPage'
-import { ConnectWalletPage } from './pages/ConnectWalletPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { ThemeProvider } from './components/ThemeProvider'
+import { Header } from './components/Header'
 
 import './index.css'
 
@@ -16,15 +16,15 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="micestake-theme">
       <WagmiProvider config={config}>
-        <QueryClientProvider client={queryClient}> 
+        <QueryClientProvider client={queryClient}>
           <Router>
+            <Header />
             <Routes>
               <Route path="/" element={<LandingPage />} />
-              <Route path="/connect" element={<ConnectWalletPage />} />
               <Route path="/dashboard" element={<DashboardPage />} />
             </Routes>
           </Router>
-        </QueryClientProvider> 
+        </QueryClientProvider>
       </WagmiProvider>
     </ThemeProvider>
   )

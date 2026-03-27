@@ -41,7 +41,9 @@
     @apply bg-background text-text-main font-body m-0 p-0 inset-0 min-h-screen transition-colors duration-300;
   }
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     @apply font-heading m-0;
   }
 }

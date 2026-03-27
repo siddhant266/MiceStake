@@ -11,35 +11,22 @@ export function LandingPage() {
     if (isConnected) {
       navigate('/dashboard');
     } else {
-      navigate('/connect');
+      window.dispatchEvent(new Event('open-wallet-modal'));
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center max-w-[1200px] mx-auto px-6 font-body">
-      
-      {/* Navbar Minimal Setup for Landing */}
-      <nav className="w-full flex justify-between items-center py-6">
-        <h1 className="text-2xl font-heading font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-          MiceStake
-        </h1>
-        <button 
-          onClick={handleStart}
-          className="bg-white/5 hover:bg-white/10 text-text-main border border-border-custom px-5 py-2.5 rounded-full font-semibold transition-all backdrop-blur-md cursor-pointer"
-        >
-          {isConnected ? "Dashboard" : "Connect App"}
-        </button>
-      </nav>
+    <div className="min-h-[calc(100vh-80px)] flex flex-col items-center max-w-[1200px] mx-auto px-6 font-body">
 
       {/* Hero Section */}
       <section className="flex flex-col md:flex-row items-center justify-between w-full mt-20 gap-16">
-        <motion.div 
+        <motion.div
           className="flex-1"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
@@ -48,7 +35,7 @@ export function LandingPage() {
             🚀 Web3 Staking Evolved
           </motion.div>
           <h2 className="font-heading text-5xl md:text-7xl font-extrabold leading-tight mb-6">
-            STAKE. EARN. <br/>
+            STAKE. EARN. <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
               GROW.
             </span>
@@ -57,7 +44,7 @@ export function LandingPage() {
             Put your crypto to work. Stake ETH and earn passive MICE rewards securely using our transparent smart contracts.
           </p>
           <div className="flex gap-4">
-            <button 
+            <button
               onClick={handleStart}
               className="bg-gradient-to-br from-primary to-primary-container text-white px-8 py-4 rounded-full font-bold shadow-[0_4px_20px_rgba(138,43,226,0.3)] hover:-translate-y-1 transition-all flex items-center gap-2 cursor-pointer"
             >
@@ -71,7 +58,7 @@ export function LandingPage() {
         </motion.div>
 
         {/* Mock Staking UI Preview */}
-        <motion.div 
+        <motion.div
           className="flex-1 w-full max-w-[500px]"
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -124,7 +111,7 @@ export function LandingPage() {
             { title: "Withdraw anytime", desc: "Unstaking is available past the initial lockup window.", icon: LockOpen },
             { title: "Transparent rewards", desc: "Real-time accrual with auditable smart contracts.", icon: ArrowRightLeft }
           ].map((feat, i) => (
-            <motion.div 
+            <motion.div
               key={feat.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 
 export function ConnectWalletPage() {
-  const { address, isConnected, isConnecting } = useAccount();
+  const { isConnected, isConnecting } = useAccount();
   const { connectors, connect, error } = useConnect();
   const navigate = useNavigate();
   const [activeConnector, setActiveConnector] = useState<string | null>(null);
@@ -27,7 +27,7 @@ export function ConnectWalletPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-background relative overflow-hidden font-body">
+    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center p-6 bg-background relative overflow-hidden font-body">
       {/* Background Orbs */}
       <div className="absolute top-[10%] left-[20%] w-[400px] h-[400px] bg-primary/20 rounded-full blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-[10%] right-[20%] w-[300px] h-[300px] bg-secondary/20 rounded-full blur-[100px] pointer-events-none"></div>
