@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useConnect, useAccount } from 'wagmi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, X, ArrowRight, Download, Wallet } from 'lucide-react';
@@ -11,6 +12,7 @@ interface WalletConnectModalProps {
 export function WalletConnectModal({ isOpen, onClose }: WalletConnectModalProps) {
   const { connectors, connectAsync, isPending } = useConnect();
   const { isConnected } = useAccount();
+  const navigate = useNavigate();
 
   const [selectedConnector, setSelectedConnector] = useState<string | null>(null);
 
@@ -36,8 +38,9 @@ export function WalletConnectModal({ isOpen, onClose }: WalletConnectModalProps)
     if (isConnected && isOpen) {
       onClose();
       setSelectedConnector(null);
+      navigate('/dashboard');
     }
-  }, [isConnected, isOpen, onClose]);
+  }, [isConnected, isOpen, onClose, navigate]);
 
   // Lock scroll
   useEffect(() => {
