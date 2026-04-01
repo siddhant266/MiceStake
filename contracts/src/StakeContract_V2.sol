@@ -1,107 +1,116 @@
-// SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.13;
+// // SPDX-License-Identifier: Unlicense
+// pragma solidity ^0.8.13;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-interface IToken {
-    function mint(address to, uint256 amount) external;
-}
+// interface IToken {
+//     function mint(address to, uint256 amount) external;
+// }
 
-contract StakeContract_V2 is Ownable {
-    uint public totalStake;
-    IToken public rewardTokenAdd;
-    
-    struct userInfo {
-        uint256 stakedAmount;
-        uint256 lastUpdateTime;
-        uint256 reward;
-    }
-    mapping(address => userInfo) public users;
-    
-    // Proxy variable slot
-    address private implementation;
-    
-    // Core features
-    mapping(address => uint256) public depositTime;
+// contract StakeContract_V2 is Ownable, ReentrancyGuard {
+//     uint public totalStake;
+//     IToken public rewardTokenAdd;
+//     struct userInfo {
+//         uint256 stakedAmount;
+//         uint256 lastUpdateTime;
+//         uint256 reward;
+//     }
+//     mapping(address => userInfo) public users;
 
-    // We no longer initialize in constructor because this is a logic contract
-    constructor() Ownable(msg.sender) {}
+//     mapping(address => uint256) public depositTime;
+//     uint256 public rewardRate;
+//     uint256 public timeFactor;
+//     uint256 public rewardMultiplier;
 
-    function initialize(address _rewardTokenAdd) external onlyOwner {
-        require(address(rewardTokenAdd) == address(0), "Already initialized");
-        rewardTokenAdd = IToken(_rewardTokenAdd);
-    }
+//     // We no longer initialize in constructor because this is a logic contract
+//     constructor() Ownable(msg.sender) {}
 
-    function stake(uint256 _amount) public payable {
-        require(msg.value > 0, "Amount must be greater than 0");
-        require(msg.value == _amount, "ETH amount mismatch");
+//     function initialize(address _rewardTokenAdd) external onlyOwner {
+//         require(address(rewardTokenAdd) == address(0), "Already initialized");
+//         rewardTokenAdd = IToken(_rewardTokenAdd);
+//         rewardRate = 15;
+//         timeFactor = 10;
+//         rewardMultiplier = 100;
+//     }
 
-        if (depositTime[msg.sender] == 0) {
-            depositTime[msg.sender] = block.timestamp;
-        }
+//     function stake(uint256 _amount) public payable nonReentrant {
+//         require(_amount > 0, "Invalid amount");
+//         require(msg.value == _amount, "ETH mismatch");
 
-        _updateRewards(msg.sender);
+//         if (depositTime[msg.sender] == 0) {
+//             depositTime[msg.sender] = block.timestamp;
+//         }
 
-        users[msg.sender].stakedAmount += _amount;
-        totalStake += _amount;
-    }
+//         _updateRewards(msg.sender);
 
-    function unstake(uint256 _amount) public {
-        require(users[msg.sender].stakedAmount >= _amount, "Not enough staked");
+//         users[msg.sender].stakedAmount += _amount;
+//         totalStake += _amount;
+//     }
 
-        _updateRewards(msg.sender);
-        users[msg.sender].stakedAmount -= _amount;
-        totalStake -= _amount;
+//     function unstake(uint256 _amount) public nonReentrant {
+//         require(users[msg.sender].stakedAmount >= _amount, "Not enough staked");
 
-        // Reset deposit time if completely unstaked
-        if (users[msg.sender].stakedAmount == 0) {
-            depositTime[msg.sender] = 0;
-        }
+//         _updateRewards(msg.sender);
+//         users[msg.sender].stakedAmount -= _amount;
+//         totalStake -= _amount;
 
-        (bool success, ) = payable(msg.sender).call{value: _amount}("");
-        require(success, "Failed to transfer ETH");
-    }
+//         (bool success, ) = payable(msg.sender).call{value: _amount}("");
+//         require(success, "Failed to transfer ETH");
+//     }
 
-    function claimRewards() public {
-        require(block.timestamp >= depositTime[msg.sender] + 21 days, "Claiming allowed only after 21 days from first deposit");
-        
-        _updateRewards(msg.sender);
-        uint256 reward = users[msg.sender].reward;
+//     function claimRewards() public nonReentrant {
+//         require(
+//             block.timestamp >= depositTime[msg.sender] + 2 minutes,
+//             "Claiming allowed only after 2 minutes from first deposit"
+//         );
 
-        require(reward > 0, "No rewards");
-        require(address(rewardTokenAdd) != address(0), "Token not set");
+//         _updateRewards(msg.sender);
+//         uint256 reward = users[msg.sender].reward;
 
-        users[msg.sender].reward = 0;
-        rewardTokenAdd.mint(msg.sender, reward);
-    }
+//         require(reward > 0, "No rewards");
+//         require(address(rewardTokenAdd) != address(0), "Token not set");
 
-    function _updateRewards(address _userAdd) internal {
-        if (users[_userAdd].lastUpdateTime == 0) {
-            users[_userAdd].lastUpdateTime = block.timestamp;
-            return;
-        }
+//         users[msg.sender].reward = 0;
+//         rewardTokenAdd.mint(msg.sender, reward);
+//     }
 
-        uint256 timediff = block.timestamp - users[_userAdd].lastUpdateTime;
-        if (timediff == 0) {
-            return;
-        }
+//     function _updateRewards(address _userAdd) internal {
+//         if (users[_userAdd].lastUpdateTime == 0) {
+//             users[_userAdd].lastUpdateTime = block.timestamp;
+//             return;
+//         }
 
-        uint256 newReward = (users[_userAdd].stakedAmount * timediff * 2) /
-            1296000;
+//         uint256 timediff = block.timestamp - users[_userAdd].lastUpdateTime;
+//         if (timediff == 0) {
+//             return;
+//         }
 
-        users[_userAdd].reward += newReward;
-        users[_userAdd].lastUpdateTime = block.timestamp;
-    }
+//         //  Speed up time for testing purposes
+//         timediff = timediff * timeFactor;
 
-    function getRewards() public view returns (uint256 reward) {
-        uint256 timediff = block.timestamp - users[msg.sender].lastUpdateTime;
-        if (timediff == 0) {
-            return 0;
-        }
+//         uint256 baseReward = (users[_userAdd].stakedAmount *
+//             timediff *
+//             rewardRate) / (365 days * 100);
 
-        uint256 newReward = (users[msg.sender].stakedAmount * timediff * 2) /
-            1296000;
+//         uint256 newReward = (baseReward * rewardMultiplier);
 
-        reward = users[msg.sender].reward + newReward;
-    }
-}
+//         users[_userAdd].reward += newReward;
+//         users[_userAdd].lastUpdateTime = block.timestamp;
+//     }
+
+//     function getRewards() public view returns (uint256 reward) {
+//         uint256 timediff = block.timestamp - users[msg.sender].lastUpdateTime;
+//         if (timediff == 0) {
+//             return 0;
+//         }
+//         //  Speed up time for testing purposes
+//         timediff = timediff * timeFactor;
+
+//         uint256 baseReward = (users[msg.sender].stakedAmount *
+//             timediff *
+//             rewardRate) / (365 days * 100);
+
+//         reward = users[msg.sender].reward + (baseReward * rewardMultiplier);
+//     }
+// }

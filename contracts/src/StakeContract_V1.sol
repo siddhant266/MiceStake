@@ -8,23 +8,16 @@ interface IToken {
 }
 
 contract StakeContract_V1 is Ownable {
-    uint public totalStake;
-    IToken public rewardTokenAdd;
-    
+    uint public totalStake; //slot-0
     struct userInfo {
         uint256 stakedAmount;
         uint256 lastUpdateTime;
         uint256 reward;
     }
-    mapping(address => userInfo) public users;
-    
-    // Proxy variable slot
-    address private implementation;
-    
-    // Core features
-    mapping(address => uint256) public depositTime;
+    mapping(address => userInfo) public users; //slot-1
+    mapping(address => uint256) public depositTime; //slot-2
+    IToken public rewardTokenAdd; //slot-3
 
-    // We no longer initialize in constructor because this is a logic contract
     constructor() Ownable(msg.sender) {}
 
     function initialize(address _rewardTokenAdd) external onlyOwner {
@@ -32,9 +25,9 @@ contract StakeContract_V1 is Ownable {
         rewardTokenAdd = IToken(_rewardTokenAdd);
     }
 
-    function stake(uint256 _amount) public payable {
-        require(msg.value > 0, "Amount must be greater than 0");
-        require(msg.value == _amount, "ETH amount mismatch");
+      function stake(uint256 _amount) public payable  {
+        require(_amount > 0, "Invalid amount");
+        require(msg.value == _amount, "ETH mismatch");
 
         if (depositTime[msg.sender] == 0) {
             depositTime[msg.sender] = block.timestamp;
