@@ -33,3 +33,22 @@ contract DeployScript is Script {
         console.log("StakeContract Proxy Deployed at:", address(proxy));
     }
 }
+
+
+
+
+
+
+
+
+
+// source .env
+
+// forge script script/Deploy.s.sol \
+//   --rpc-url $SEPOLIA_RPC_URL \
+//   --private-key $PRIVATE_KEY \
+//   --broadcast
+
+//   Token Deployed at: 0xa861597499fbF9fe9089e2A35a9c18e1aDdeFBa5
+//   StakeContract Logic (V1) Deployed at: 0x8B6bF8b7103827E9321D4A822Ae46A7442b4e8DE
+//   StakeContract Proxy Deployed at: 0x84FDdBD7120D3e45C1D92585cf194e98dA61A1ac
